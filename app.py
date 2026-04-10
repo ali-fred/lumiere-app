@@ -6,7 +6,8 @@ from functools import wraps
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+
+app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
 
 DB = 'database.db'
@@ -270,4 +271,4 @@ def logout():
 # Run
 # ------------------------
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000)
