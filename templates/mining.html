@@ -1,0 +1,37 @@
+<h2>Mining</h2>
+
+<p>Reward: 2.4 LDP / 24h</p>
+
+<div id="countdown"></div>
+
+<form id="mineForm" action="/mining/{{ user.username }}" method="POST" style="display:none;">
+  <button type="submit">Start Mining</button>
+</form>
+
+<br>
+<a href="/dashboard/{{ user.username }}">Back</a>
+
+<script>
+  // total seconds (hours + minutes from Flask)
+  let totalSeconds = ({{ hours }} * 3600) + ({{ minutes }} * 60);
+
+  function updateCountdown() {
+    if (totalSeconds <= 0) {
+      document.getElementById("countdown").innerHTML = "✅ Ready to mine!";
+      document.getElementById("mineForm").style.display = "block";
+      return;
+    }
+
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    document.getElementById("countdown").innerHTML =
+      "⏳ " + hours + "h " + minutes + "m " + seconds + "s";
+
+    totalSeconds--;
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>

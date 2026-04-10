@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lumière Du Progrès</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Lumière Du Progrès</h1>
+
+<hr>
+
+<h3>User: test</h3>
+
+<p><b>Balance:</b> <span id="balance"></span></p>
+<p><b>Total Supply:</b> <span id="totalSupply"></span> LDP</p>
+<p><b>LDP Price:</b> $<span id="ldpPrice"></span></p>
+
+<hr>
+
+<h3>Your Wallet</h3>
+<p id="walletAddress"></p>
+<button onclick="copyWallet()">Copy Wallet</button>
+
+<hr>
+
+<h3>Mining</h3>
+<button onclick="mineLDP()">Mine LDP</button>
+<p>Mining reward: 0.1 LDP</p>
+<p>Cooldown: <span id="cooldown"></span></p>
+
+<hr>
+
+<h3>Send LDP</h3>
+<input id="sendAddress" placeholder="Receiver Wallet Address">
+<br><br>
+<input id="sendAmount" placeholder="Amount">
+<br><br>
+<button onclick="sendLDP()">Send LDP</button>
+
+<hr>
+
+<h3>Transactions</h3>
+<div id="transactions"></div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

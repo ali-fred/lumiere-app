@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quick Actions</title>
+<style>
+body {font-family: Arial; background:#f2f2f2; text-align:center;}
+a {display:block; margin:15px; background:#FF5722; color:white; padding:15px; border-radius:10px; text-decoration:none; font-weight:bold;}
+</style>
+</head>
+
+<body>
+
+<h2>⚡ Quick Actions</h2>
+
+<a href="/wallet/{{ user.username }}">💰 Wallet</a>
+<a href="/send/{{ user.username }}">💸 Send Money</a>
+<a href="/transactions/{{ user.username }}">📊 Transactions</a>
+
+<a href="/dashboard/{{ user.username }}">⬅ Back</a>
+
+</body>
+</html>

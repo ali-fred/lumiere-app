@@ -1,0 +1,73 @@
+/* ------------------------
+   GLOBAL STYLING
+------------------------ */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 100%; /* indome nto */
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5; /* background yoroheje */
+}
+
+/* ------------------------
+   NAVBAR / MENU
+------------------------ */
+.navbar {
+    display: flex;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    gap: 15px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.navbar a:hover {
+    background-color: #555;
+}
+
+/* ------------------------
+   DASHBOARD GRID
+------------------------ */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+/* ------------------------
+   CARD STYLING
+------------------------ */
+.card {
+    background-color: #2196F3; /* default bleu */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.card a {
+    color: white;
+    text-decoration: none;
+    font-size: 100%;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* ------------------------
+   SPECIFIC CARD COLORS
+------------------------ */
+.card.wallet { background-color: #4CAF50; }   /* green */
+.card.transactions { background-color: #FF9800; } /* orange */
+.card.mining { background-color: #9C27B0; }   /* purple */
+.card.send { background-color: #E91E63; }     /* pink */

@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+}
+
+/* TITLE */
+h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 400px;
+    margin: auto;
+    padding: 15px;
+}
+
+/* CARDS */
+.card {
+    margin-top: 15px;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+/* COLORS */
+.green { background: #4CAF50; }
+.blue { background: #2196F3; }
+.orange { background: #FF9800; }
+.purple { background: #9C27B0; }
+.red { background: #E91E63; }
+
+/* LINKS */
+a {
+    text-decoration: none;
+    color: white;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* LOGOUT */
+.logout {
+    display: block;
+    text-align: center;
+    margin: 20px;
+    color: red;
+}

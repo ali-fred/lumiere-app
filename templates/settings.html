@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Settings</title>
+
+<style>
+.settings-link {
+    display: block;
+    margin: 10px 0;
+    background: #ffffff;
+    color: #333;
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #ddd;
+}
+</style>
+    <style>
+        body { font-family: Arial; background:#f2f2f2; text-align:center; }
+        h2 { margin-top: 20px; }
+        .card { margin: 15px auto; padding: 20px; max-width: 400px; border-radius:15px; background:#607D8B; color:white; font-size:22px; transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        a { color:white; text-decoration:none; font-size:22px; }
+        input { width: 80%; padding: 12px; margin:10px 0; font-size:18px; border-radius:10px; border:1px solid #ccc; }
+        button { width: 85%; padding:15px; font-size:20px; border-radius:10px; background:#9C27B0; color:white; border:none; }
+    </style>
+</head>
+<body>
+<h2>⚙️ Settings</h2>
+
+<div class="card">
+    <form method="POST">
+        <input type="text" name="username" placeholder="Change username" value="{{ user.username }}"><br>
+        <input type="password" name="password" placeholder="Change password"><br>
+        <button type="submit">Save</button>
+    </form>
+</div>
+<a class="settings-link" href="/contact/{{ user.username }}">📞 Contact Us</a>
+<a class="settings-link" href="/about/{{ user.username }}">ℹ️ About</a>
+<a class="settings-link" href="/privacy/{{ user.username }}">📄 Conditions</a>
+<a class="settings-link" href="/confidentialite/{{ user.username }}">🔒 Confidentialité</a>
+</body>
+</html>

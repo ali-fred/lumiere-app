@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Money</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        input {
+            width: 80%;
+            padding: 15px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 85%;
+            padding: 15px;
+            font-size: 20px;
+            background: #E91E63;
+            color: white;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>💸 Send Money</h2>
+
+<div class="container">
+    <form method="POST">
+        <input type="text" name="receiver" placeholder="Receiver username" required><br>
+        <input type="number" name="amount" placeholder="Amount" required><br>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+</body>
+</html>
