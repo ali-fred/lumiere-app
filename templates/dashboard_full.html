@@ -32,6 +32,29 @@
 .menu a:hover {
     background: linear-gradient(to right, #007bff, #0097a7);
 }
+
+<style>
+body {
+    font-size: 20px !important;
+}
+
+h2 {
+    font-size: 26px !important;
+}
+
+.balance {
+    font-size: 24px !important;
+}
+
+.menu a {
+    font-size: 20px !important;
+    padding: 15px !important;
+}
+
+.header {
+    font-size: 22px !important;
+}
+</style>
 </style>
 
 </style>
@@ -62,7 +85,7 @@
 
     <!-- SEND -->
     <div class="card red">
-<a href="/send/{{ username }}" onclick="cooldown(this)">💸 Send</a>
+<a href="#" data-link="/send/{{ username }}" onclick="return cooldown(this)">💸 Send</a>
     </div>
 
     <!-- MINING -->
@@ -100,15 +123,15 @@
     🔗 Share your link:<br>
     <input type="text" value="https://lumiere-app-yygr.onrender.com/register?ref={{ username }}" readonly style="width:100%; padding:10px;">
 </div>
-
 <script>
 function cooldown(btn) {
     btn.style.pointerEvents = "none";
-    btn.style.background = "#999"; // grey igihe iri muri cooldown
-    btn.style.color = "#fff";
+    btn.style.background = "#999";
 
     let time = 3;
     let originalText = btn.innerHTML;
+
+    let link = btn.getAttribute("data-link");
 
     let interval = setInterval(() => {
         btn.innerHTML = "⏳ " + time + "s";
@@ -116,14 +139,13 @@ function cooldown(btn) {
 
         if (time < 0) {
             clearInterval(interval);
-            btn.style.pointerEvents = "auto";
-            btn.style.background = "linear-gradient(to right, #1e90ff, #00bcd4)"; // igaruka ku couleur yawe
-            btn.innerHTML = originalText;
+            window.location.href = link; // ijayo rimwe gusa
         }
     }, 1000);
+
+    return false;
 }
 </script>
-
 <a class="logout" href="/logout">Logout</a>
 
 </body>
