@@ -9,9 +9,36 @@
         .balance {
             font-size: 22px;
         }
-    </style>
-</head>
+    
+<style>
+.header {
+    background: linear-gradient(to right, #0f2027, #2c5364);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
 
+.balance {
+    color: #00c853;
+    font-weight: bold;
+}
+
+.menu a {
+    background: linear-gradient(to right, #1e90ff, #00bcd4);
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: linear-gradient(to right, #007bff, #0097a7);
+}
+</style>
+
+</style>
+</head>
+<div class="header">
+    🌟 Lumière Du Progrès
+</div>
 <body>
 
 <h2>Welcome, {{ user.username }}</h2>
@@ -35,7 +62,7 @@
 
     <!-- SEND -->
     <div class="card red">
-        <a href="/send/{{ user.username }}">💸 Send</a>
+<a href="/send/{{ username }}" onclick="cooldown(this)">
     </div>
 
     <!-- MINING -->
@@ -68,8 +95,22 @@
         <a href="/finance/{{ user.username }}">💹 Finance</a>
     </div>
 
-</div>
 
+<div style="margin:20px;">
+    🔗 Share your link:<br>
+    <input type="text" value="https://lumiere-app-yygr.onrender.com/register?ref={{ username }}" readonly style="width:100%; padding:10px;">
+</div>
+<script>
+function cooldown(btn) {
+    btn.style.pointerEvents = "none";
+    btn.style.opacity = "0.5";
+
+    setTimeout(() => {
+        btn.style.pointerEvents = "auto";
+        btn.style.opacity = "1";
+    }, 3000);
+}
+</script>
 <a class="logout" href="/logout">Logout</a>
 
 </body>
