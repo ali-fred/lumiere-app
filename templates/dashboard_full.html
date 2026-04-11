@@ -62,7 +62,7 @@
 
     <!-- SEND -->
     <div class="card red">
-<a href="/send/{{ username }}" onclick="cooldown(this)">
+<a href="/send/{{ username }}" onclick="cooldown(this)">💸 Send</a>
     </div>
 
     <!-- MINING -->
@@ -100,17 +100,30 @@
     🔗 Share your link:<br>
     <input type="text" value="https://lumiere-app-yygr.onrender.com/register?ref={{ username }}" readonly style="width:100%; padding:10px;">
 </div>
+
 <script>
 function cooldown(btn) {
     btn.style.pointerEvents = "none";
-    btn.style.opacity = "0.5";
+    btn.style.background = "#999"; // grey igihe iri muri cooldown
+    btn.style.color = "#fff";
 
-    setTimeout(() => {
-        btn.style.pointerEvents = "auto";
-        btn.style.opacity = "1";
-    }, 3000);
+    let time = 3;
+    let originalText = btn.innerHTML;
+
+    let interval = setInterval(() => {
+        btn.innerHTML = "⏳ " + time + "s";
+        time--;
+
+        if (time < 0) {
+            clearInterval(interval);
+            btn.style.pointerEvents = "auto";
+            btn.style.background = "linear-gradient(to right, #1e90ff, #00bcd4)"; // igaruka ku couleur yawe
+            btn.innerHTML = originalText;
+        }
+    }, 1000);
 }
 </script>
+
 <a class="logout" href="/logout">Logout</a>
 
 </body>
