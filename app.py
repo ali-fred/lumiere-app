@@ -4,8 +4,15 @@ import hashlib
 import os
 from functools import wraps
 from datetime import datetime, timedelta
+import time
+
+mine_cooldown = {}
 
 app = Flask(__name__)
+
+users = {
+    "Huruma": {"balance": 100}
+}
 
 app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -180,36 +187,23 @@ def send(username):
 
     return render_template('send.html', user=user)
 
-@app.route('/mining/<username>', methods=['GET', 'POST'])
-@login_required
-def mining(username):
-    user = get_user(username)
-    now = datetime.now()
+@app.route('/mine/<username>')
+def mine(username):
+    current_time = time.time()
 
-    last_mining = user['last_mining']
-    if last_mining:
-        last_time = datetime.fromisoformat(last_mining)
-        diff = now - last_time
-    else:
-        diff = timedelta(hours=24)
+    # cooldown 10 seconds
+    if username in mine_cooldown:
+        if current_time - mine_cooldown[username] < 10:
+            return "⏳ Wait cooldown before mining again"
 
-    if request.method == 'POST' and diff >= timedelta(hours=24):
-        conn = sqlite3.connect(DB)
-        cursor = conn.cursor()
+    mine_cooldown[username] = current_time
 
-        new_balance = user['balance'] + 2.4
-        cursor.execute(
-            "UPDATE users SET balance=?, last_mining=? WHERE username=?",
-            (new_balance, now.isoformat(), username)
-        )
+    # increase balance (example)
+    user = users.get(username)
+    if user:
+        user['balance'] += 5
 
-        conn.commit()
-        conn.close()
-
-        return redirect(f'/dashboard/{username}')
-
-    return render_template('mining.html', user=user)
-
+    return render_template("mine.html", username=username, balance=user['balance'])
 
 @app.route('/qr/<username>')
 @login_required
