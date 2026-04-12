@@ -46,7 +46,6 @@ def login_required(f):
 # ------------------------
 # Routes
 # ------------------------
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -54,7 +53,7 @@ def login():
         password = request.form.get('password')
 
         if not username or not password:
-            return "Please provide both username and password", 400
+            return "Please provide both username and password"
 
         user = get_user(username)
 
@@ -108,10 +107,14 @@ def dashboard(username):
         return "User not found", 404
 
     data = f"User:{username},Balance:{user['balance']}"
-    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?data={data}&size=150x150"
+    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?data={data}"
 
-    return render_template("dashboard_full.html", user=user, qr_url=qr_url)
-
+    return render_template(
+        "dashboard_full.html",
+        username=username,
+        user=user,
+        qr_url=qr_url
+    )
 
 @app.route('/wallet/<username>')
 @login_required
