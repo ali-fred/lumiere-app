@@ -13,7 +13,7 @@ app = Flask(__name__)
 users = {
     "Huruma": {"balance": 100}
 }
-
+send_cooldown = {}
 app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
 
@@ -132,79 +132,40 @@ def transactions(username):
     return render_template('transaction.html', txs=txs, user={'username': username})
 
 
-@app.route('/send/<username>', methods=['GET', 'POST'])
-@login_required
+@app.route('/send/<username>')
 def send(username):
-    user = get_user(username)
+    import time
 
-    if request.method == 'POST':
-        receiver = request.form.get('receiver')
+    now = time.time()
 
-        # 🔐 VALIDATION MUST STAY INSIDE POST
-        if not receiver or not request.form.get('amount'):
-            return "Fill all fields", 400
+    if username in send_cooldown:
+        if now - send_cooldown[username] < 10:
+            return "⏳ Rindira gato imbere yo gusubira kohereza"
 
-        try:
-            amount = float(request.form.get('amount'))
-        except:
-            return "Invalid amount", 400
+    send_cooldown[username] = now
 
-        if amount <= 0:
-            return "Amount must be greater than 0", 400
-
-        if receiver == username:
-            return "You cannot send money to yourself", 400
-
-        receiver_user = get_user(receiver)
-        if not receiver_user:
-            return "Receiver not found", 404
-
-        if user['balance'] < amount:
-            return "Insufficient balance", 400
-
-        conn = sqlite3.connect(DB)
-        cursor = conn.cursor()
-
-        cursor.execute(
-            "UPDATE users SET balance=? WHERE username=?",
-            (user['balance'] - amount, username)
-        )
-
-        cursor.execute(
-            "UPDATE users SET balance=? WHERE username=?",
-            (receiver_user['balance'] + amount, receiver)
-        )
-
-        cursor.execute(
-            "INSERT INTO transactions (sender, receiver, amount, datetime) VALUES (?, ?, ?, ?)",
-            (username, receiver, amount, datetime.now().isoformat())
-        )
-
-        conn.commit()
-        conn.close()
-
-        return redirect(f'/dashboard/{username}')
-
-    return render_template('send.html', user=user)
-
+    return render_template("send.html", username=username)
 @app.route('/mine/<username>')
 def mine(username):
-    current_time = time.time()
+    import time
 
-    # cooldown 10 seconds
+    now = time.time()
+
     if username in mine_cooldown:
-        if current_time - mine_cooldown[username] < 10:
-            return "⏳ Wait cooldown before mining again"
+        if now - mine_cooldown[username] < 10:
+            return "⏳ Rindira gato (cooldown)"
 
-    mine_cooldown[username] = current_time
+    mine_cooldown[username] = now
 
-    # increase balance (example)
-    user = users.get(username)
-    if user:
-        user['balance'] += 5
+    # increase balance
+    if username in users:
+        users[username]["balance"] += 5
 
-    return render_template("mine.html", username=username, balance=user['balance'])
-
+    return render_template(
+        "mine.html",
+        username=username,
+        balance=users[username]["balance"]
+    )
 @app.route('/qr/<username>')
 @login_required
 def qr(username):
