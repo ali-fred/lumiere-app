@@ -6,14 +6,15 @@ from functools import wraps
 from datetime import datetime, timedelta
 import time
 
-mine_cooldown = {}
 
 app = Flask(__name__)
 
 users = {
     "Huruma": {"balance": 100}
 }
+mine_cooldown = {}
 send_cooldown = {}
+
 app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
 
@@ -145,6 +146,7 @@ def send(username):
     send_cooldown[username] = now
 
     return render_template("send.html", username=username)
+
 @app.route('/mine/<username>')
 def mine(username):
     import time
@@ -166,6 +168,7 @@ def mine(username):
         username=username,
         balance=users[username]["balance"]
     )
+
 @app.route('/qr/<username>')
 @login_required
 def qr(username):
