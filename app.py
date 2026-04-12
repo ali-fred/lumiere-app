@@ -135,40 +135,12 @@ def transactions(username):
 
 @app.route('/send/<username>')
 def send(username):
-    import time
+    return "SEND PAGE " + username
 
-    now = time.time()
-
-    if username in send_cooldown:
-        if now - send_cooldown[username] < 10:
-            return "⏳ Rindira gato imbere yo gusubira kohereza"
-
-    send_cooldown[username] = now
-
-    return render_template("send.html", username=username)
 
 @app.route('/mine/<username>')
 def mine(username):
-    import time
-
-    now = time.time()
-
-    if username in mine_cooldown:
-        if now - mine_cooldown[username] < 10:
-            return "⏳ Rindira gato (cooldown)"
-
-    mine_cooldown[username] = now
-
-    # increase balance
-    if username in users:
-        users[username]["balance"] += 5
-
-    return render_template(
-        "mine.html",
-        username=username,
-        balance=users[username]["balance"]
-    )
-
+    return "MINE PAGE " + username
 @app.route('/qr/<username>')
 @login_required
 def qr(username):
