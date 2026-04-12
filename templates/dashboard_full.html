@@ -111,6 +111,7 @@ h2 {
     <!-- QUICK ACTIONS -->
     <div class="card orange">
         <a href="/quick_actions/{{ user.username }}">⚡ Quick Actions</a>
+        <a href="/mine/{{ user.username }}">⛏ Mine</a>
     </div>
 
     <!-- FINANCE -->
@@ -137,7 +138,13 @@ function cooldown(btn) {
         btn.innerHTML = "⏳ " + time + "s";
         time--;
 
-        if (time < 0) {
+
+    if (time < 0) {
+        clearInterval(interval);
+        window.location.href = link;
+    }
+}, 1000);
+
             clearInterval(interval);
             window.location.href = link; // ijayo rimwe gusa
         }

@@ -12,6 +12,7 @@ app = Flask(__name__)
 users = {
     "Huruma": {"balance": 100}
 }
+
 mine_cooldown = {}
 send_cooldown = {}
 
@@ -157,7 +158,7 @@ def mine(username):
 
     if username in mine_cooldown:
         if now - mine_cooldown[username] < 10:
-            return "⏳ Rindira gato (cooldown)"
+            return "⏳ Cooldown active"
 
     mine_cooldown[username] = now
 
@@ -169,7 +170,6 @@ def mine(username):
         username=username,
         balance=users[username]["balance"]
     )
-
 @app.route('/qr/<username>')
 @login_required
 def qr(username):
