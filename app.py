@@ -9,12 +9,22 @@ import time
 
 app = Flask(__name__)
 
+# -------- USERS --------
 users = {
-    "Huruma": {"balance": 100}
+    "Huruma": {"password": "1234", "balance": 100}
 }
 
+# -------- MINING SETTINGS --------
+MAX_SUPPLY = 1000000  # max tokens
+TOTAL_MINED = 0
+
+MINE_RATE_PER_DAY = 2.4
+MINE_PER_CLICK = MINE_RATE_PER_DAY / 24  # 0.1 LDP per hour
+
+# -------- COOLDOWN --------
 mine_cooldown = {}
 send_cooldown = {}
+
 
 app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -152,24 +162,34 @@ def send(username):
 
 @app.route('/mine/<username>')
 def mine(username):
-    import time
+    global TOTAL_MINED
 
     now = time.time()
 
     if username in mine_cooldown:
-        if now - mine_cooldown[username] < 10:
+        if now - mine_cooldown[username] < 5:
             return "⏳ Cooldown active"
 
     mine_cooldown[username] = now
 
+    if TOTAL_MINED >= MAX_SUPPLY:
+        return "⛔ Max supply reached"
+
+    reward = MINE_PER_CLICK
+
     if username in users:
-        users[username]["balance"] += 5
+        users[username]["balance"] += reward
+
+    TOTAL_MINED += reward
 
     return render_template(
         "mine.html",
         username=username,
-        balance=users[username]["balance"]
+        balance=users[username]["balance"],
+        mined=TOTAL_MINED,
+        max_supply=MAX_SUPPLY
     )
+
 @app.route('/qr/<username>')
 @login_required
 def qr(username):
