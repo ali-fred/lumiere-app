@@ -83,20 +83,11 @@ h2 {
         <a href="/transactions/{{ user.username }}">📊 Transactions</a>
     </div>
 
-    <!-- SEND -->
-    <div class="card red">
-<a href="#" data-link="/send/{{ username }}" onclick="return cooldown(this)">💸 Send</a>
-    </div>
 
     <!-- MINING -->
-    <div class="card green">
-        <form action="/mining/{{ user.username }}" method="POST">
-            <button style="width:100%; padding:10px; border:none; border-radius:10px;">
-                ⚡ Start Mining
-            </button>
-        </form>
-    </div>
-
+<div class="card green">
+    <a href="/mine/{{ user.username }}">⛏ Mine</a>
+</div>
     <!-- QR -->
     <div class="card blue">
         <p>📷 QR Code</p>
@@ -111,6 +102,12 @@ h2 {
     <!-- QUICK ACTIONS -->
     <div class="card orange">
         <a href="/quick_actions/{{ user.username }}">⚡ Quick Actions</a>
+
+<div class="card orange">
+    <a href="/send/{{ user.username }}">💸 Send</a>
+    <a href="/receive/{{ user.username }}">📥 Receive</a>
+</div>
+
     </div>
 
     <!-- FINANCE -->

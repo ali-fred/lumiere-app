@@ -263,7 +263,10 @@ def mine_fixed(username):
         username=username,
         balance=users[username]["balance"]
     )
-
+# -------- RECEIVE --------
+@app.route('/receive/<username>')
+def receive(username):
+    return render_template("receive.html", username=username)
 @app.route('/logout')
 def logout():
     session.pop('username', None)
