@@ -57,25 +57,25 @@ def login_required(f):
 # ------------------------
 # Routes
 # ------------------------
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
 
-        if not username or not password:
-            return "Please provide both username and password"
+        # check niba user ariho
+        if username in users:
+            # check password
+            if users[username]["password"] == password:
+                session['username'] = username
+                return redirect(f'/dashboard/{username}')
+            else:
+                return "Wrong password"
 
-        user = get_user(username)
+        return "Invalid user"
 
-        if user and user['password'] == hash_password(password):
-            session['username'] = username
-            session.permanent = True
-            return redirect(f'/dashboard/{username}')
-        else:
-            return "Invalid User", 400
-
-    return render_template('login.html')
+    return render_template("login.html")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
