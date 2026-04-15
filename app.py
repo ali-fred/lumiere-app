@@ -164,11 +164,20 @@ def send(username):
 def mine(username):
     global TOTAL_MINED
 
+    import time
     now = time.time()
 
-    if username in mine_cooldown:
-        if now - mine_cooldown[username] < 5:
-            return "⏳ Cooldown active"
+    if username not in users:
+        return "User not found"
+
+    if "balance" not in users[username]:
+        users[username]["balance"] = 0
+
+    if username not in mine_cooldown:
+        mine_cooldown[username] = 0
+
+    if now - mine_cooldown[username] < 5:
+        return "⏳ Cooldown active"
 
     mine_cooldown[username] = now
 
@@ -177,9 +186,7 @@ def mine(username):
 
     reward = MINE_PER_CLICK
 
-    if username in users:
-        users[username]["balance"] += reward
-
+    users[username]["balance"] += reward
     TOTAL_MINED += reward
 
     return render_template(
