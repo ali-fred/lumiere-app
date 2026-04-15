@@ -240,29 +240,6 @@ def confidentialite(username):
     user = get_user(username)
     return render_template('confidentialite.html', user=user)
 
-# -------- FIX MINE ROUTE --------
-mine_cooldown = {}
-
-@app.route('/mine/<username>')
-def mine_fixed(username):
-    import time
-
-    now = time.time()
-
-    if username in mine_cooldown:
-        if now - mine_cooldown[username] < 5:
-            return "⏳ Cooldown active"
-
-    mine_cooldown[username] = now
-
-    if username in users:
-        users[username]["balance"] += 5
-
-    return render_template(
-        "mine.html",
-        username=username,
-        balance=users[username]["balance"]
-    )
 # -------- RECEIVE --------
 @app.route('/receive/<username>')
 def receive(username):
