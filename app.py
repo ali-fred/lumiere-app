@@ -15,7 +15,7 @@ users = {
 }
 
 # -------- MINING SETTINGS --------
-MAX_SUPPLY = 1000000  # max tokens
+MAX_SUPPLY = 1000000000  # max LDPs
 TOTAL_MINED = 0
 
 MINE_RATE_PER_DAY = 2.4
@@ -64,19 +64,19 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        # check niba user ariho
+        # debug (optional)
+        print("USERS:", users)
+
         if username in users:
-            # check password
             if users[username]["password"] == password:
                 session['username'] = username
                 return redirect(f'/dashboard/{username}')
             else:
                 return "Wrong password"
 
-        return "Invalid user"
+        return "User Not Found"
 
     return render_template("login.html")
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
