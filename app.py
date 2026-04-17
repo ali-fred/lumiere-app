@@ -135,11 +135,10 @@ def dashboard(username):
 def wallet(username):
     user = get_user(username)
 
-    # add wallet if not exists
-    if "wallet" not in user:
-        user["wallet"] = f"LDP-{username}-001"
+    # force wallet address
+    wallet_address = f"LDP-{username}-001"
 
-    return render_template('wallet.html', user=user)
+    return render_template('wallet.html', user=user, wallet=wallet_address)
 
 @app.route('/transactions/<username>')
 @login_required

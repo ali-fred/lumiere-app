@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Wallet</title>
-</head>
-<body>
-
-<h1>Wallet Alfred</h1>
 <h2>💰 Wallet {{ user.username }}</h2>
 
 <p>💰 Balance: {{ user.balance }} LDP</p>
 
 <p>🔑 Address:</p>
-<input type="text" value="{{ user.wallet }}" readonly style="width:100%">
+<input type="text" value="{{ wallet }}" readonly style="width:100%">
 
 <br><br>
 <a href="/dashboard/{{ user.username }}">⬅ Back</a>
-<p>Your balance will appear here...</p>
-
-<a href="/dashboard">Back</a>
-
-</body>
-</html>
