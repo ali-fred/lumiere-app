@@ -15,8 +15,15 @@ users = {
         "password": "1234",
         "balance": 100,
         "wallet": "LDP-HURUMA-001"
+    },
+    "Alfred": {
+        "password": "1234",
+        "balance": 500,
+        "wallet": "LDP-ALFRED-001"
     }
 }
+
+
 # -------- MINING SETTINGS --------
 MAX_SUPPLY = 1000000000  # max LDP
 TOTAL_MINED = 0
