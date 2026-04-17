@@ -77,7 +77,7 @@ def login():
         user = get_user(username)
 
         if user:
-            if user['password'] == password:
+            if user['password'] == hash_password(password):
                 session['username'] = username
                 return redirect(f'/dashboard/{username}')
             else:
@@ -86,6 +86,7 @@ def login():
         return "User Not Found"
 
     return render_template("login.html")
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
