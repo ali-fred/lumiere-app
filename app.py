@@ -11,9 +11,12 @@ app = Flask(__name__)
 
 # -------- USERS --------
 users = {
-    "Huruma": {"password": "1234", "balance": 100}
+    "Huruma": {
+        "password": "1234",
+        "balance": 100,
+        "wallet": "LDP-HURUMA-001"
+    }
 }
-
 # -------- MINING SETTINGS --------
 MAX_SUPPLY = 1000000000  # max LDP
 TOTAL_MINED = 0
@@ -131,8 +134,12 @@ def dashboard(username):
 @login_required
 def wallet(username):
     user = get_user(username)
-    return render_template('wallet.html', user=user)
 
+    # add wallet if not exists
+    if "wallet" not in user:
+        user["wallet"] = f"LDP-{username}-001"
+
+    return render_template('wallet.html', user=user)
 
 @app.route('/transactions/<username>')
 @login_required
