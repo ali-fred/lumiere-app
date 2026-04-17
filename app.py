@@ -175,9 +175,10 @@ def mine(username):
 
     if username not in mine_cooldown:
         mine_cooldown[username] = 0
-    if now - mine_cooldown[username] < 86400:
-        return "⏳ Cooldown active"
-
+if now - mine_cooldown[username] < 86400:
+    remaining = int(86400 - (now - mine_cooldown[username]))
+    hours = remaining // 3600
+    return f"⏳ Subira inyuma mu masaha {hours} (1x/24h)"
     mine_cooldown[username] = now
 
     if TOTAL_MINED >= MAX_SUPPLY:
@@ -263,3 +264,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
 # FORCE UPDATE
+# cooldown update
