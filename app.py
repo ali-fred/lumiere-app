@@ -67,11 +67,10 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        # debug (optional)
-        print("USERS:", users)
+        user = get_user(username)
 
-        if username in users:
-            if users[username]["password"] == password:
+        if user:
+            if user['password'] == password:
                 session['username'] = username
                 return redirect(f'/dashboard/{username}')
             else:
@@ -80,6 +79,7 @@ def login():
         return "User Not Found"
 
     return render_template("login.html")
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
