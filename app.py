@@ -175,8 +175,7 @@ def mine(username):
 
     if username not in mine_cooldown:
         mine_cooldown[username] = 0
-
-    if now - mine_cooldown[username] < 5:
+    if now - mine_cooldown[username] < 86400:
         return "⏳ Cooldown active"
 
     mine_cooldown[username] = now
