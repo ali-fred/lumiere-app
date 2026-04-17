@@ -249,9 +249,30 @@ def confidentialite(username):
     return render_template('confidentialite.html', user=user)
 
 # -------- RECEIVE --------
-@app.route('/receive/<username>')
+
+@app.route('/receive/<username>', methods=['GET', 'POST'])
 def receive(username):
+    if request.method == 'POST':
+        from_user = request.form.get('from_user')
+        amount = float(request.form.get('amount'))
+
+        sender = get_user(from_user)
+        receiver = get_user(username)
+
+        if not sender or not receiver:
+            return "User not found"
+
+        if sender['balance'] < amount:
+            return "Not enough balance"
+
+        # transfer
+        sender['balance'] -= amount
+        receiver['balance'] += amount
+
+        return f"✅ Received {amount} LDP from {from_user}"
+
     return render_template("receive.html", username=username)
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)

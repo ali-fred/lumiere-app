@@ -1,5 +1,12 @@
-<h2>📥 Receive</h2>
+<h2>📥 Receive Money</h2>
+
 <p>User: {{ username }}</p>
 
-<p>Share this link to receive money:</p>
-<input type="text" value="https://lumiere-app-yygr.onrender.com/send/{{ username }}" style="width:100%">
+<form method="POST">
+    <input name="from_user" placeholder="Sender username" required><br><br>
+    <input name="amount" placeholder="Amount" type="number" step="0.1" required><br><br>
+    <button>Receive</button>
+</form>
+
+<br>
+<a href="/dashboard/{{ username }}">⬅ Back</a>
