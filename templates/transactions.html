@@ -1,10 +1,14 @@
 <h2>📊 Transactions - {{ username }}</h2>
 
-{% for tx in txs %}
-    <p>
-        {{ tx['sender'] }} ➡ {{ tx['receiver'] }} : {{ tx['amount'] }} LDP
-    </p>
-{% endfor %}
+{% if txs %}
+    {% for tx in txs %}
+        <p>
+            {{ tx['sender'] }} ➡ {{ tx['receiver'] }} : {{ tx['amount'] }} LDP
+        </p>
+    {% endfor %}
+{% else %}
+    <p>No transactions yet</p>
+{% endif %}
 
 <br>
 <a href="/dashboard/{{ username }}">⬅ Back</a>
