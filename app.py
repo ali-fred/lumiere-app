@@ -27,7 +27,7 @@ MINE_PER_CLICK = MINE_RATE_PER_DAY / 24  # 0.1 LDP per hour
 # -------- COOLDOWN --------
 mine_cooldown = {}
 send_cooldown = {}
-
+transactions = []
 
 app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -146,11 +146,19 @@ def transactions(username):
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM transactions WHERE sender=? OR receiver=?", (username, username))
+
+    cursor.execute("""
+        SELECT sender, receiver, amount 
+        FROM transactions 
+        WHERE sender = ? OR receiver = ?
+        ORDER BY id DESC
+    """, (username, username))
+
     txs = cursor.fetchall()
     conn.close()
 
-    return render_template('transaction.html', txs=txs, user={'username': username})
+    return render_template('transactions.html', txs=txs, username=username)
+
 
 @app.route('/send/<username>')
 def send(username):
@@ -265,16 +273,38 @@ def receive(username):
         if sender['balance'] < amount:
             return "Not enough balance"
 
-        # transfer
-        sender['balance'] -= amount
-        receiver['balance'] += amount
+        import sqlite3
+        conn = sqlite3.connect(DB)
+        cursor = conn.cursor()
+
+        # 🔥 UPDATE BALANCES IN DATABASE
+        cursor.execute(
+            "UPDATE users SET balance = balance - ? WHERE username = ?",
+            (amount, from_user)
+        )
+
+        cursor.execute(
+            "UPDATE users SET balance = balance + ? WHERE username = ?",
+            (amount, username)
+        )
+
+        # 🔥 SAVE TRANSACTION
+        cursor.execute(
+            "INSERT INTO transactions (sender, receiver, amount) VALUES (?, ?, ?)",
+            (from_user, username, amount)
+        )
+
+        conn.commit()
+        conn.close()
 
         return f"✅ Received {amount} LDP from {from_user}"
 
     return render_template("receive.html", username=username)
 
-@app.route('/logout')
-def logout():
+
+
+
+@app.route('/logout') def logout():
     session.pop('username', None)
     return redirect('/')
 
