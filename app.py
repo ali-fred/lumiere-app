@@ -79,13 +79,16 @@ def login():
         if user:
             hashed_input = hash_password(password)
 
+            print("DB:", user['password'])
+            print("INPUT:", hashed_input)
+
             if user['password'] == hashed_input:
                 session['username'] = username
                 return redirect(f'/dashboard/{username}')
             else:
                 return "Wrong password"
 
-        return "User Not Found"
+        return "User not found"
 
     return render_template("login.html")
 
@@ -94,9 +97,6 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-
-        if not username or not password:
-            return "Please provide both username and password"
 
         hashed = hash_password(password)
 
@@ -109,17 +109,16 @@ def register():
                 (username, hashed, 1000)
             )
             conn.commit()
-
-        except sqlite3.IntegrityError:
+        except:
             conn.close()
-            return "Username already exists!", 400
+            return "Username already exists"
 
         conn.close()
-
         session['username'] = username
         return redirect(f'/dashboard/{username}')
 
     return render_template('register.html')
+
 
 @app.route('/dashboard/<username>')
 @login_required
@@ -313,12 +312,10 @@ def receive(username):
     return render_template("receive.html", username=username)
 
 
-
-
-@app.route('/logout') def logout():
-    session.pop('username', None)
+@app.route('/logout')
+def logout():
+    session.clear()
     return redirect('/')
-
 
 # ------------------------
 # Run
