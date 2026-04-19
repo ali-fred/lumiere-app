@@ -131,7 +131,18 @@ def dashboard(username):
         return "User not found", 404
 
     data = f"User:{username},Balance:{user['balance']}"
-    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?data={data}"
+    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?d@app.route('/reset')
+def reset():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM users")
+    cursor.execute("DELETE FROM transactions")
+
+    conn.commit()
+    conn.close()
+
+    return "Database cleared"ata={data}"
 
     return render_template(
         "dashboard_full.html",
