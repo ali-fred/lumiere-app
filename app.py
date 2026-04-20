@@ -194,6 +194,8 @@ def send(username):
     send_cooldown[username] = now
 
     return render_template("send.html", username=username)
+
+
 @app.route('/mine/<username>')
 def mine(username):
     global TOTAL_MINED
@@ -327,6 +329,19 @@ def receive(username):
 def logout():
     session.clear()
     return redirect('/')
+
+@app.route('/reset')
+def reset():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM users")
+    cursor.execute("DELETE FROM transactions")
+
+    conn.commit()
+    conn.close()
+
+    return "Database cleared"
 
 # ------------------------
 # Run
