@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+{% if success %}
+<div style="background: green; color: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
+    ✅ Transaction successful!
+</div>
+{% endif %}
+
     <title>Dashboard</title>
 
     <link rel="stylesheet" href="/static/style.css">

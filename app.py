@@ -6,7 +6,6 @@ from functools import wraps
 from datetime import datetime, timedelta
 import time
 
-
 app = Flask(__name__)
 
 # -------- USERS --------
@@ -23,18 +22,16 @@ users = {
     }
 }
 
-
 # -------- MINING SETTINGS --------
-MAX_SUPPLY = 1000000000  # max LDP
+MAX_SUPPLY = 1000000000
 TOTAL_MINED = 0
 
 MINE_RATE_PER_DAY = 2.4
-MINE_PER_CLICK = MINE_RATE_PER_DAY / 24  # 0.1 LDP per hour
+MINE_PER_CLICK = MINE_RATE_PER_DAY / 24
 
 # -------- COOLDOWN --------
 mine_cooldown = {}
 send_cooldown = {}
-transactions = []
 
 app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -42,7 +39,37 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 DB = 'database.db'
 
 # ------------------------
-# Helper functions
+# INIT DB
+# ------------------------
+def init_db():
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        username TEXT PRIMARY KEY,
+        password TEXT,
+        balance REAL
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS transactions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sender TEXT,
+        receiver TEXT,
+        amount REAL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# ------------------------
+# HELPERS
 # ------------------------
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -65,9 +92,8 @@ def login_required(f):
     return decorated
 
 # ------------------------
-# Routes
+# LOGIN
 # ------------------------
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -77,12 +103,7 @@ def login():
         user = get_user(username)
 
         if user:
-            hashed_input = hash_password(password)
-
-            print("DB:", user['password'])
-            print("INPUT:", hashed_input)
-
-            if user['password'] == hashed_input:
+            if user['password'] == hash_password(password):
                 session['username'] = username
                 return redirect(f'/dashboard/{username}')
             else:
@@ -92,6 +113,9 @@ def login():
 
     return render_template("login.html")
 
+# ------------------------
+# REGISTER
+# ------------------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -119,7 +143,9 @@ def register():
 
     return render_template('register.html')
 
-
+# ------------------------
+# DASHBOARD
+# ------------------------
 @app.route('/dashboard/<username>')
 @login_required
 def dashboard(username):
@@ -130,48 +156,42 @@ def dashboard(username):
     if not user:
         return "User not found", 404
 
+    success = request.args.get('success')
+
     data = f"User:{username},Balance:{user['balance']}"
-    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?d@app.route('/reset')
-def reset():
-    conn = sqlite3.connect(DB)
-    cursor = conn.cursor()
-
-    cursor.execute("DELETE FROM users")
-    cursor.execute("DELETE FROM transactions")
-
-    conn.commit()
-    conn.close()
-
-    return "Database cleared"ata={data}"
+    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?data={data}"
 
     return render_template(
         "dashboard_full.html",
         username=username,
         user=user,
-        qr_url=qr_url
+        qr_url=qr_url,
+        success=success
     )
 
+# ------------------------
+# WALLET
+# ------------------------
 @app.route('/wallet/<username>')
 @login_required
 def wallet(username):
     user = get_user(username)
-
-    # force wallet address
     wallet_address = f"LDP-{username}-001"
-
     return render_template('wallet.html', user=user, wallet=wallet_address)
 
+# ------------------------
+# TRANSACTIONS
+# ------------------------
 @app.route('/transactions/<username>')
 @login_required
 def transactions(username):
     conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT sender, receiver, amount 
-        FROM transactions 
-        WHERE sender = ? OR receiver = ?
+        SELECT sender, receiver, amount, timestamp
+        FROM transactions
+        WHERE sender=? OR receiver=?
         ORDER BY id DESC
     """, (username, username))
 
@@ -180,34 +200,55 @@ def transactions(username):
 
     return render_template('transactions.html', txs=txs, username=username)
 
-
-@app.route('/send/<username>')
+# ------------------------
+# SEND
+# ------------------------
+@app.route('/send/<username>', methods=['GET', 'POST'])
+@login_required
 def send(username):
-    import time
+    if request.method == 'POST':
+        receiver = request.form.get('receiver')
+        amount = float(request.form.get('amount'))
 
-    now = time.time()
+        sender_data = get_user(username)
+        receiver_data = get_user(receiver)
 
-    if username in send_cooldown:
-        if now - send_cooldown[username] < 10:
-            return "⏳ Rindira gato imbere yo gusubira kohereza"
+        if not receiver_data:
+            return "Receiver not found"
 
-    send_cooldown[username] = now
+        if sender_data['balance'] < amount:
+            return "Insufficient balance"
+
+        conn = sqlite3.connect(DB)
+        cursor = conn.cursor()
+
+        cursor.execute("UPDATE users SET balance = balance - ? WHERE username=?", (amount, username))
+        cursor.execute("UPDATE users SET balance = balance + ? WHERE username=?", (amount, receiver))
+
+        cursor.execute(
+            "INSERT INTO transactions (sender, receiver, amount) VALUES (?, ?, ?)",
+            (username, receiver, amount)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect(f'/dashboard/{username}?success=1')
 
     return render_template("send.html", username=username)
 
-
+# ------------------------
+# MINE
+# ------------------------
 @app.route('/mine/<username>')
 def mine(username):
     global TOTAL_MINED
 
-    import time
     now = time.time()
 
     if username in mine_cooldown:
         if now - mine_cooldown[username] < 86400:
-            remaining = int(86400 - (now - mine_cooldown[username]))
-            hours = remaining // 3600
-            return f"⏳ Subira inyuma mu masaha {hours} (1x/24h)"
+            return "⏳ Subira hanyuma"
 
     mine_cooldown[username] = now
 
@@ -229,58 +270,58 @@ def mine(username):
         max_supply=MAX_SUPPLY
     )
 
+# ------------------------
+# QR
+# ------------------------
 @app.route('/qr/<username>')
 @login_required
 def qr(username):
     user = get_user(username)
     data = f"User:{username},Balance:{user['balance']}"
-    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?data={data}&size=150x150"
+    qr_url = f"https://api.qrserver.com/v1/create-qr-code/?data={data}"
     return render_template("qr.html", qr_url=qr_url)
 
-
+# ------------------------
+# SETTINGS + PAGES
+# ------------------------
 @app.route('/settings/<username>')
 @login_required
 def settings(username):
-    user = get_user(username)
-    return render_template('settings.html', user=user)
+    return render_template('settings.html', user=get_user(username))
 
 @app.route('/quick_actions/<username>')
 @login_required
 def quick_actions(username):
-    user = get_user(username)
-    return render_template('quick_actions.html', user=user)
+    return render_template('quick_actions.html', user=get_user(username))
+
 @app.route('/finance/<username>')
 @login_required
 def finance(username):
-    user = get_user(username)
-    return render_template('finance.html', user=user)
+    return render_template('finance.html', user=get_user(username))
 
 @app.route('/about/<username>')
 @login_required
 def about(username):
-    user = get_user(username)
-    return render_template('about.html', user=user)
+    return render_template('about.html', user=get_user(username))
 
 @app.route('/contact/<username>')
 @login_required
 def contact(username):
-    user = get_user(username)
-    return render_template('contact.html', user=user)
+    return render_template('contact.html', user=get_user(username))
 
 @app.route('/privacy/<username>')
 @login_required
 def privacy(username):
-    user = get_user(username)
-    return render_template('privacy.html', user=user)
+    return render_template('privacy.html', user=get_user(username))
 
 @app.route('/confidentialite/<username>')
 @login_required
 def confidentialite(username):
-    user = get_user(username)
-    return render_template('confidentialite.html', user=user)
+    return render_template('confidentialite.html', user=get_user(username))
 
-# -------- RECEIVE --------
-
+# ------------------------
+# RECEIVE
+# ------------------------
 @app.route('/receive/<username>', methods=['GET', 'POST'])
 def receive(username):
     if request.method == 'POST':
@@ -296,22 +337,12 @@ def receive(username):
         if sender['balance'] < amount:
             return "Not enough balance"
 
-        import sqlite3
         conn = sqlite3.connect(DB)
         cursor = conn.cursor()
 
-        # 🔥 UPDATE BALANCES IN DATABASE
-        cursor.execute(
-            "UPDATE users SET balance = balance - ? WHERE username = ?",
-            (amount, from_user)
-        )
+        cursor.execute("UPDATE users SET balance = balance - ? WHERE username=?", (amount, from_user))
+        cursor.execute("UPDATE users SET balance = balance + ? WHERE username=?", (amount, username))
 
-        cursor.execute(
-            "UPDATE users SET balance = balance + ? WHERE username = ?",
-            (amount, username)
-        )
-
-        # 🔥 SAVE TRANSACTION
         cursor.execute(
             "INSERT INTO transactions (sender, receiver, amount) VALUES (?, ?, ?)",
             (from_user, username, amount)
@@ -324,12 +355,17 @@ def receive(username):
 
     return render_template("receive.html", username=username)
 
-
+# ------------------------
+# LOGOUT
+# ------------------------
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('/')
 
+# ------------------------
+# RESET
+# ------------------------
 @app.route('/reset')
 def reset():
     conn = sqlite3.connect(DB)
@@ -344,13 +380,8 @@ def reset():
     return "Database cleared"
 
 # ------------------------
-# Run
+# RUN
 # ------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-# FORCE UPDATE
-# cooldown update
-# FORCE UPDATE 2
-# fix mine duplicate
-# login fix
