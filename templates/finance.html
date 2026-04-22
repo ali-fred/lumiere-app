@@ -1,20 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Finance</title>
-<style>
-body {font-family: Arial; background:#f2f2f2; text-align:center;}
-a {display:block; margin:15px; background:#3F51B5; color:white; padding:15px; border-radius:10px; text-decoration:none; font-weight:bold;}
-</style>
+    <title>Finance</title>
 </head>
+<body style="background:#0d1117; font-family:Arial;">
 
-<body>
+    <div style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+                color: white;
+                padding: 20px;
+                border-radius: 15px;
+                margin: 20px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.5);">
 
-<h2>💹 Finance</h2>
+        <h2>💰 Lumicash Wallet</h2>
 
-<a href="/wallet/{{ user.username }}">💰 Balance</a>
-<a href="/transactions/{{ user.username }}">📊 History</a>
-<a href="/dashboard/{{ user.username }}">🏠 Dashboard</a>
+        <p style="font-size:14px; opacity:0.8;">Your registered number</p>
+
+        <h3>📱 {{ user.phone }}</h3>
+
+        <hr style="border: 1px solid rgba(255,255,255,0.2);">
+
+        <div style="margin-top:15px;">
+            <a href="/deposit/{{ username }}" 
+               style="background:#00c853; padding:10px; border-radius:8px; color:white; text-decoration:none;">
+                ➕ Deposit
+            </a>
+
+            <a href="/withdraw/{{ username }}" 
+               style="background:#d50000; padding:10px; border-radius:8px; color:white; text-decoration:none; margin-left:10px;">
+                ➖ Withdraw
+            </a>
+        </div>
+    </div>
 
 </body>
 </html>
