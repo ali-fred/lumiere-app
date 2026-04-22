@@ -123,7 +123,7 @@ def register():
         password = request.form.get('password')
         phone = request.form.get('phone')
 
-        # 🔥 BASIC VALIDATION (PRO TIP 1)
+        # 🔥 BASIC VALIDATION
         if not username or not password:
             return "Please fill all fields"
 
@@ -133,7 +133,7 @@ def register():
         cursor = conn.cursor()
 
         try:
-            # 🔥 PRO TIP 2: check if user exists before insert
+            # 🔥 Check if user exists
             cursor.execute("SELECT * FROM users WHERE username=?", (username,))
             existing_user = cursor.fetchone()
 
@@ -141,7 +141,7 @@ def register():
                 conn.close()
                 return "Username already exists"
 
-            # 🔥 INSERT USER (UNCHANGED STRUCTURE + phone added)
+            # 🔥 Insert user (SAFE + COMPLETE)
             cursor.execute(
                 "INSERT INTO users (username, password, balance, phone) VALUES (?, ?, ?, ?)",
                 (username, hashed, 1000, phone)
