@@ -121,6 +121,7 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        phone = request.form.get('phone')
 
         hashed = hash_password(password)
 
@@ -129,8 +130,8 @@ def register():
 
         try:
             cursor.execute(
-                "INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
-                (username, hashed, 1000)
+                "INSERT INTO users (username, password, balance, phone) VALUES (?, ?, ?, ?)",
+                (username, hashed, 1000, phone)
             )
             conn.commit()
         except:
@@ -142,7 +143,6 @@ def register():
         return redirect(f'/dashboard/{username}')
 
     return render_template('register.html')
-
 # ------------------------
 # DASHBOARD
 # ------------------------
