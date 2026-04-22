@@ -123,22 +123,38 @@ def register():
         password = request.form.get('password')
         phone = request.form.get('phone')
 
+        # 🔥 BASIC VALIDATION (PRO TIP 1)
+        if not username or not password:
+            return "Please fill all fields"
+
         hashed = hash_password(password)
 
         conn = sqlite3.connect(DB)
         cursor = conn.cursor()
 
         try:
+            # 🔥 PRO TIP 2: check if user exists before insert
+            cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+            existing_user = cursor.fetchone()
+
+            if existing_user:
+                conn.close()
+                return "Username already exists"
+
+            # 🔥 INSERT USER (UNCHANGED STRUCTURE + phone added)
             cursor.execute(
                 "INSERT INTO users (username, password, balance, phone) VALUES (?, ?, ?, ?)",
                 (username, hashed, 1000, phone)
             )
+
             conn.commit()
-        except:
+
+        except Exception as e:
             conn.close()
-            return "Username already exists"
+            return f"Error: {str(e)}"
 
         conn.close()
+
         session['username'] = username
         return redirect(f'/dashboard/{username}')
 
