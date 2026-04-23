@@ -143,10 +143,9 @@ def register():
 
             # 🔥 Insert user (SAFE + COMPLETE)
             cursor.execute(
-                "INSERT INTO users (username, password, balance, phone) VALUES (?, ?, ?, ?)",
-                (username, hashed, 1000, phone)
-            )
-
+               "INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
+               (username, hashed, 1000)
+               )
             conn.commit()
 
         except Exception as e:
@@ -313,7 +312,9 @@ def quick_actions(username):
 @app.route('/finance/<username>')
 @login_required
 def finance(username):
-    return render_template('finance.html', user=get_user(username))
+    user = get_user(username)
+    return render_template('finance.html', user=user, username=username)
+
 
 @app.route('/about/<username>')
 @login_required

@@ -3,34 +3,67 @@
 <head>
     <title>Finance</title>
 </head>
-<body style="background:#0d1117; font-family:Arial;">
+<body style="background:#0d1117; font-family:Arial; color:white;">
 
-    <div style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-                color: white;
-                padding: 20px;
-                border-radius: 15px;
-                margin: 20px;
-                box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+    <div style="
+        background: linear-gradient(135deg, #1f2937, #111827);
+        padding: 20px;
+        border-radius: 15px;
+        margin: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    ">
 
-        <h2>💰 Lumicash Wallet</h2>
+        <h2>💹 Finance</h2>
 
-        <p style="font-size:14px; opacity:0.8;">Your registered number</p>
-
-        <h3>📱 {{ user.phone }}</h3>
+        <p style="font-size:14px; opacity:0.8;">
+            Manage your financial activities here.
+        </p>
 
         <hr style="border: 1px solid rgba(255,255,255,0.2);">
 
-        <div style="margin-top:15px;">
-            <a href="/deposit/{{ username }}" 
-               style="background:#00c853; padding:10px; border-radius:8px; color:white; text-decoration:none;">
-                ➕ Deposit
+        <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+
+            <a href="/transactions/{{ username }}"
+               style="
+                   background:#2962ff;
+                   padding:10px 15px;
+                   border-radius:8px;
+                   text-decoration:none;
+                   color:white;
+               ">
+                📊 Transactions
             </a>
 
-            <a href="/withdraw/{{ username }}" 
-               style="background:#d50000; padding:10px; border-radius:8px; color:white; text-decoration:none; margin-left:10px;">
-                ➖ Withdraw
+            <a href="/send/{{ username }}"
+               style="
+                   background:#00c853;
+                   padding:10px 15px;
+                   border-radius:8px;
+                   text-decoration:none;
+                   color:white;
+               ">
+                💸 Send
             </a>
+
+            <a href="/receive/{{ username }}"
+               style="
+                   background:#ffab00;
+                   padding:10px 15px;
+                   border-radius:8px;
+                   text-decoration:none;
+                   color:black;
+               ">
+                📥 Receive
+            </a>
+
         </div>
+
+    </div>
+
+    <div style="margin:20px;">
+        <a href="/dashboard/{{ username }}" style="color:#58a6ff;">
+            ⬅ Back to Dashboard
+        </a>
     </div>
 
 </body>
