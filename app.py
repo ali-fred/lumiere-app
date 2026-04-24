@@ -302,7 +302,9 @@ def qr(username):
 @app.route('/settings/<username>')
 @login_required
 def settings(username):
-    return render_template('settings.html', user=get_user(username))
+    user = get_user(username)
+    return render_template('settings.html', user=user, username=username)
+
 
 @app.route('/quick_actions/<username>')
 @login_required

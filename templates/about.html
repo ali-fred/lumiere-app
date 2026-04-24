@@ -1,31 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>About</title>
+<title>About - Lumière Du Progrès</title>
 
 <style>
 body {
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background: #f2f2f2;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 .card {
     background: white;
-    padding: 20px;
-    margin: 30px;
+    padding: 25px;
+    margin: 30px auto;
     border-radius: 15px;
+    width: 85%;
+    max-width: 650px;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+}
+
+h2, h3 {
+    color: #333;
+}
+
+p {
+    color: #555;
+    line-height: 1.6;
+}
+
+.roadmap {
+    text-align: left;
+    margin-top: 20px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #2196F3;
+}
+
+.roadmap h3 {
+    margin-top: 0;
+    color: #2196F3;
+}
+
+.roadmap ul {
+    padding-left: 20px;
+}
+
+.roadmap li {
+    margin-bottom: 8px;
 }
 
 a {
-    display: block;
+    display: inline-block;
     margin-top: 20px;
     background: #2196F3;
     color: white;
-    padding: 12px;
+    padding: 12px 18px;
     border-radius: 10px;
     text-decoration: none;
     font-weight: bold;
+}
+
+a:hover {
+    background: #1976D2;
 }
 </style>
 </head>
@@ -33,11 +73,34 @@ a {
 <body>
 
 <div class="card">
-    <h2>ℹ️ About</h2>
-    <p>Lumiere App ni application ya wallet ikoreshwa mu kohereza no kwakira amafaranga.</p>
-    <p>Irimwo features nka wallet, transactions, mining na security.</p>
+
+    <h2>ℹ️ About Lumière Du Progrès</h2>
+
+    <p>
+        Lumière Du Progrès ni application ya wallet ifasha abakoresha kubika, 
+        kohereza no kwakira amafaranga mu buryo bworoshe kandi bwizewe.
+    </p>
+
+    <p>
+        Irimwo features zirimo wallet management, transaction history, sending & receiving funds,
+        hamwe n’indi mirimo y’ingenzi ifasha abakoresha.
+    </p>
+
+    <div class="roadmap">
+        <h3>🛣️ Roadmap (Inyongera zigiye kuza)</h3>
+        <ul>
+            <li>📱 Mobile App (Android & iOS)</li>
+            <li>🔐 2FA Security (Two Factor Authentication)</li>
+            <li>🌍 Multi-currency support</li>
+            <li>💳 Integration ya Mobile Money (Lumicash, Ecocash, n’abandi)</li>
+            <li>🤝 Referral & earning system</li>
+            <li>📊 Advanced analytics dashboard</li>
+            <li>💬 Live support chat</li>
+        </ul>
+    </div>
 
     <a href="/dashboard/{{ user.username }}">⬅ Back to Dashboard</a>
+
 </div>
 
 </body>
