@@ -36,6 +36,11 @@ send_cooldown = {}
 app.secret_key = os.environ.get("SECRET_KEY", "mysecret123")
 app.permanent_session_lifetime = timedelta(minutes=30)
 
+@app.before_request
+def set_default_language():
+    if 'lang' not in session:
+        session['lang'] = 'en'
+
 DB = 'database.db'
 
 # ------------------------

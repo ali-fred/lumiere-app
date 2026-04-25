@@ -55,12 +55,11 @@ Settings
     <h3>🌐 Language</h3>
 
     <form method="POST" action="/set_language">
-        <select name="language" style="padding:10px; border-radius:8px; width:100%;">
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="rn">Kirundi</option>
-        </select>
-
+<select name="language" style="padding:10px; border-radius:8px; width:100%;">
+    <option value="en" {% if session.get('lang') == 'en' %}selected{% endif %}>English</option>
+    <option value="fr" {% if session.get('lang') == 'fr' %}selected{% endif %}>Français</option>
+    <option value="rn" {% if session.get('lang') == 'rn' %}selected{% endif %}>Kirundi</option>
+</select>
         <button type="submit" style="margin-top:10px; padding:10px; background:#2196F3; color:white; border:none; border-radius:8px;">
             Save
         </button>
