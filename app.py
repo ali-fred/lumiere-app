@@ -44,8 +44,6 @@ def set_default_language():
 DB = 'database.db'
 BONUS = 50  # ushobora guhindura
 
-# new user bonus
-balance = BONUS
 # ------------------------
 # INIT DB
 # ------------------------
@@ -124,6 +122,7 @@ def login():
 # ------------------------
 # REGISTER
 # ------------------------
+
 @app.route('/register', methods=['GET', 'POST'])
 @app.route('/register/<referrer>', methods=['GET', 'POST'])
 def register(referrer=None):
@@ -141,18 +140,18 @@ def register(referrer=None):
             conn.close()
             return "User already exists"
 
-        # 🎁 new user bonus
+        # 🎁 bonus for new user
         balance = BONUS
 
-        # save new user (⚠ niba ufise hash_password, uyisubize)
+        # insert new user
         c.execute("INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
                   (username, password, balance))
 
-        # 🎁 give bonus to referrer ONLY IF EXISTS
+        # 🎁 bonus for referrer (if exists)
         if referrer:
             c.execute("SELECT * FROM users WHERE username=?", (referrer,))
             if c.fetchone():
-                c.execute("UPDATE users SET balance = balance + ? WHERE username = ?", 
+                c.execute("UPDATE users SET balance = balance + ? WHERE username=?",
                           (BONUS, referrer))
 
         conn.commit()
@@ -161,6 +160,7 @@ def register(referrer=None):
         return redirect('/login')
 
     return render_template('register.html')
+
 # ------------------------
 # DASHBOARD
 # ------------------------
