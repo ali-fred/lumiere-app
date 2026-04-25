@@ -42,7 +42,10 @@ def set_default_language():
         session['lang'] = 'en'
 
 DB = 'database.db'
+BONUS = 50  # ushobora guhindura
 
+# new user bonus
+balance = BONUS
 # ------------------------
 # INIT DB
 # ------------------------
@@ -122,47 +125,42 @@ def login():
 # REGISTER
 # ------------------------
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+@app.route('/register/<referrer>', methods=['GET', 'POST'])
+def register(referrer=None):
+
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        phone = request.form.get('phone')
-
-        # 🔥 BASIC VALIDATION
-        if not username or not password:
-            return "Please fill all fields"
-
-        hashed = hash_password(password)
+        username = request.form['username']
+        password = request.form['password']
 
         conn = sqlite3.connect(DB)
-        cursor = conn.cursor()
+        c = conn.cursor()
 
-        try:
-            # 🔥 Check if user exists
-            cursor.execute("SELECT * FROM users WHERE username=?", (username,))
-            existing_user = cursor.fetchone()
+        # check if user exists
+        c.execute("SELECT * FROM users WHERE username=?", (username,))
+        if c.fetchone():
+            return "User already exists"
 
-            if existing_user:
-                conn.close()
-                return "Username already exists"
+        # 🎁 new user gets bonus
+        balance = BONUS
 
-            # 🔥 Insert user (SAFE + COMPLETE)
-            cursor.execute(
-               "INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
-               (username, hashed, 1000)
-               )
-            conn.commit()
+        # save new user
+        c.execute("INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
+                  (username, password, balance))
+        conn = sqlite3.connect(DB)
+        c = conn.cursor()
 
-        except Exception as e:
-            conn.close()
-            return f"Error: {str(e)}"
+        # 🎁 give bonus to referrer (if exists)
+        if referrer:
+            c.execute("UPDATE users SET balance = balance + ? WHERE username = ?", 
+                      (BONUS, referrer))
 
+        conn.commit()
         conn.close()
 
-        session['username'] = username
-        return redirect(f'/dashboard/{username}')
+        return redirect('/login')
 
     return render_template('register.html')
+
 # ------------------------
 # DASHBOARD
 # ------------------------
