@@ -140,7 +140,7 @@ Welcome, {{ user.username }}
 
 <div style="margin:20px;">
     🔗 Share your link:<br>
-    <input type="text" value="https://lumiere-app.onrender.com/register/{{ user.username }}" style="width:100%;">
+<input type="text" value="{{ request.host_url }}register/{{ user.username }}">
 </div>
 
 <script>
