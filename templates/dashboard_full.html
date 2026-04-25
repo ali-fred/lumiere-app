@@ -1,43 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-{% if success %}
-<div style="background: green; color: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
-    ✅ Transaction successful!
-</div>
+
+<title>
+{% if session.get('lang') == 'fr' %}
+Tableau de bord
+{% elif session.get('lang') == 'rn' %}
+Ibikurikirana
+{% else %}
+Dashboard
 {% endif %}
+</title>
 
-    <title>Dashboard</title>
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<meta name="theme-color" content="#0d6efd">
 
-    <link rel="stylesheet" href="/static/style.css">
-
-    <style>
-        .balance {
-            font-size: 22px;
-        }
-    
-<style>
-.header {
-    background: linear-gradient(to right, #0f2027, #2c5364);
-    color: white;
-    padding: 15px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.balance {
-    color: #00c853;
-    font-weight: bold;
-}
-
-.menu a {
-    background: linear-gradient(to right, #1e90ff, #00bcd4);
-    transition: 0.3s;
-}
-
-.menu a:hover {
-    background: linear-gradient(to right, #007bff, #0097a7);
-}
+<link rel="stylesheet" href="/static/style.css">
 
 <style>
 body {
@@ -50,33 +28,70 @@ h2 {
 
 .balance {
     font-size: 24px !important;
+    color: #00c853;
+    font-weight: bold;
+}
+
+.header {
+    background: linear-gradient(to right, #0f2027, #2c5364);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
 }
 
 .menu a {
+    background: linear-gradient(to right, #1e90ff, #00c6ff);
+    transition: 0.3s;
     font-size: 20px !important;
     padding: 15px !important;
 }
 
-.header {
-    font-size: 22px !important;
+.menu a:hover {
+    background: linear-gradient(to right, #007bff, #00aaff);
 }
 </style>
-</style>
 
-</style>
 </head>
+
+<body>
+
+{% if success %}
+<div style="background: green; color: white; padding: 10px;">
+    ✅ Transaction successful!
+</div>
+{% endif %}
+
 <div class="header">
     🌟 Lumière Du Progrès
 </div>
-<body>
 
-<h2>Welcome, {{ user.username }}</h2>
+<h2>
+{% if session.get('lang') == 'fr' %}
+Bienvenue, {{ user.username }}
+{% elif session.get('lang') == 'rn' %}
+Murakaza neza, {{ user.username }}
+{% else %}
+Welcome, {{ user.username }}
+{% endif %}
+</h2>
 
 <div class="container">
 
     <!-- BALANCE -->
     <div class="card green">
-        <div class="balance">💰 Balance: {{ user.balance }}</div>
+        <div class="balance">
+            💰 
+            {% if session.get('lang') == 'fr' %}
+            Solde:
+            {% elif session.get('lang') == 'rn' %}
+            Amafaranga:
+            {% else %}
+            Balance:
+            {% endif %}
+            {{ user.balance }}
+        </div>
     </div>
 
     <!-- WALLET -->
@@ -89,11 +104,11 @@ h2 {
         <a href="/transactions/{{ user.username }}">📊 Transactions</a>
     </div>
 
-
     <!-- MINING -->
-<div class="card green">
-    <a href="/mine/{{ user.username }}">⛏ Mine</a>
-</div>
+    <div class="card green">
+        <a href="/mine/{{ user.username }}">⛏ Mine</a>
+    </div>
+
     <!-- QR -->
     <div class="card blue">
         <p>📷 QR Code</p>
@@ -107,13 +122,13 @@ h2 {
 
     <!-- QUICK ACTIONS -->
     <div class="card orange">
-        <a href="/quick_actions/{{ user.username }}">⚡ Quick Actions</a>
+        <a href="/quick_actions/{{ user.username }}">⚡ Actions</a>
+    </div>
 
-<div class="card orange">
-    <a href="/send/{{ user.username }}">💸 Send</a>
-    <a href="/receive/{{ user.username }}">📥 Receive</a>
-</div>
-
+    <!-- SEND / RECEIVE -->
+    <div class="card orange">
+        <a href="/send/{{ user.username }}">💸 Send</a>
+        <a href="/receive/{{ user.username }}">📥 Receive</a>
     </div>
 
     <!-- FINANCE -->
@@ -121,42 +136,19 @@ h2 {
         <a href="/finance/{{ user.username }}">💹 Finance</a>
     </div>
 
+</div>
 
 <div style="margin:20px;">
     🔗 Share your link:<br>
-    <input type="text" value="https://lumiere-app-yygr.onrender.com/register?ref={{ username }}" readonly style="width:100%; padding:10px;">
-    <!-- <p>📱 {{ user.phone }}</p> -->
+    <input type="text" value="https://lumiere-app.onrender.com/register/{{ user.username }}" style="width:100%;">
 </div>
 
 <script>
-function cooldown(btn) {
-    btn.style.pointerEvents = "none";
-    btn.style.background = "#999";
-
-    let time = 3;
-    let originalText = btn.innerHTML;
-
-    let link = btn.getAttribute("data-link");
-
-    let interval = setInterval(() => {
-        btn.innerHTML = "⏳ " + time + "s";
-        time--;
-
-
-    if (time < 0) {
-        clearInterval(interval);
-        window.location.href = link;
-    }
-}, 1000);
-
-            clearInterval(interval);
-            window.location.href = link; // ijayo rimwe gusa
-        }
-    }, 1000);
-
-    return false;
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/sw.js');
 }
 </script>
+
 <a class="logout" href="/logout">Logout</a>
 
 </body>

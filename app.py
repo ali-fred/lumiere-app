@@ -305,6 +305,11 @@ def settings(username):
     user = get_user(username)
     return render_template('settings.html', user=user, username=username)
 
+@app.route('/set_language', methods=['POST'])
+def set_language():
+    lang = request.form.get('language')
+    session['lang'] = lang
+    return redirect(request.referrer)
 
 @app.route('/quick_actions/<username>')
 @login_required
