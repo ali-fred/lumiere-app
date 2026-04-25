@@ -161,6 +161,11 @@ def register(referrer=None):
 
     return render_template('register.html')
 
+@app.route('/test')
+def test():
+    return "OK"
+
+
 # ------------------------
 # DASHBOARD
 # ------------------------
