@@ -129,8 +129,8 @@ def login():
 def register(referrer=None):
 
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
 
         conn = sqlite3.connect(DB)
         c = conn.cursor()
@@ -138,21 +138,22 @@ def register(referrer=None):
         # check if user exists
         c.execute("SELECT * FROM users WHERE username=?", (username,))
         if c.fetchone():
+            conn.close()
             return "User already exists"
 
-        # 🎁 new user gets bonus
+        # 🎁 new user bonus
         balance = BONUS
 
-        # save new user
+        # save new user (⚠ niba ufise hash_password, uyisubize)
         c.execute("INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
                   (username, password, balance))
-        conn = sqlite3.connect(DB)
-        c = conn.cursor()
 
-        # 🎁 give bonus to referrer (if exists)
+        # 🎁 give bonus to referrer ONLY IF EXISTS
         if referrer:
-            c.execute("UPDATE users SET balance = balance + ? WHERE username = ?", 
-                      (BONUS, referrer))
+            c.execute("SELECT * FROM users WHERE username=?", (referrer,))
+            if c.fetchone():
+                c.execute("UPDATE users SET balance = balance + ? WHERE username = ?", 
+                          (BONUS, referrer))
 
         conn.commit()
         conn.close()
@@ -160,7 +161,6 @@ def register(referrer=None):
         return redirect('/login')
 
     return render_template('register.html')
-
 # ------------------------
 # DASHBOARD
 # ------------------------
