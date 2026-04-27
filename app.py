@@ -125,7 +125,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
-    referrer = request.args.get('ref')  # 👈 from URL
+    referrer = request.args.get('ref')
 
     if request.method == 'POST':
         username = request.form.get('username')
@@ -140,14 +140,11 @@ def register():
             conn.close()
             return "User already exists"
 
-        # 🎁 new user bonus
         balance = BONUS
 
-        # insert new user
         c.execute("INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
                   (username, password, balance))
 
-        # 🎁 bonus for referrer
         if referrer:
             c.execute("SELECT * FROM users WHERE username=?", (referrer,))
             if c.fetchone():
@@ -160,7 +157,6 @@ def register():
         return redirect('/login')
 
     return render_template('register.html')
-
 # ------------------------
 # DASHBOARD
 # ------------------------
