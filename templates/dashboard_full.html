@@ -33,7 +33,7 @@ h2 {
 }
 
 .header {
-    background: linear-gradient(to right, #0f2027, #2c5364);
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
     color: white;
     padding: 15px;
     text-align: center;
@@ -42,14 +42,19 @@ h2 {
 }
 
 .menu a {
-    background: linear-gradient(to right, #1e90ff, #00c6ff);
+    background: linear-gradient(to right, #1e90ff, #0d6efd);
     transition: 0.3s;
     font-size: 20px !important;
     padding: 15px !important;
+    display: block;
+    margin: 10px 0;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
 }
 
 .menu a:hover {
-    background: linear-gradient(to right, #007bff, #00aaff);
+    background: linear-gradient(to right, #007bff, #0056b3);
 }
 </style>
 
@@ -82,7 +87,7 @@ Welcome, {{ user.username }}
     <!-- BALANCE -->
     <div class="card green">
         <div class="balance">
-            💰 
+            💰
             {% if session.get('lang') == 'fr' %}
             Solde:
             {% elif session.get('lang') == 'rn' %}
@@ -122,7 +127,7 @@ Welcome, {{ user.username }}
 
     <!-- QUICK ACTIONS -->
     <div class="card orange">
-        <a href="/quick_actions/{{ user.username }}">⚡ Actions</a>
+        <a href="/quick_actions/{{ user.username }}">⚡ Quick Actions</a>
     </div>
 
     <!-- SEND / RECEIVE -->
@@ -136,11 +141,8 @@ Welcome, {{ user.username }}
         <a href="/finance/{{ user.username }}">💹 Finance</a>
     </div>
 
-
-<div style="margin:20px;">
-    🔗 Share your link:<br>
-    <input type="text" value="{{ request.host_url }}register?ref={{ user.username }}" style="width:100%;">
 </div>
+
 <script>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/static/sw.js');

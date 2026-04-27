@@ -42,7 +42,6 @@ def set_default_language():
         session['lang'] = 'en'
 
 DB = 'database.db'
-BONUS = 50  # ushobora guhindura
 
 # ------------------------
 # INIT DB
@@ -125,8 +124,6 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
-    referrer = request.args.get('ref')
-
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -140,16 +137,12 @@ def register():
             conn.close()
             return "User already exists"
 
-        balance = BONUS
+        # 👇 nta bonus
+        balance = 0
 
+        # insert user
         c.execute("INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
                   (username, password, balance))
-
-        if referrer:
-            c.execute("SELECT * FROM users WHERE username=?", (referrer,))
-            if c.fetchone():
-                c.execute("UPDATE users SET balance = balance + ? WHERE username=?",
-                          (BONUS, referrer))
 
         conn.commit()
         conn.close()
