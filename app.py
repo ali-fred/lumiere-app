@@ -122,10 +122,9 @@ def login():
 # ------------------------
 # REGISTER
 # ------------------------
-@app.route('/register/', defaults={'referrer': None}, methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 @app.route('/register/<referrer>', methods=['GET', 'POST'])
-def register(referrer):
-
+def register(referrer=None):
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
