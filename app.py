@@ -118,6 +118,11 @@ def login():
 
     return render_template("login.html")
 
+
+# 👉 kugira /login nayo ikore
+@app.route('/login', methods=['GET', 'POST'])
+def login_redirect():
+    return redirect('/')
 # ------------------------
 # REGISTER
 # ------------------------
