@@ -136,13 +136,11 @@ Welcome, {{ user.username }}
         <a href="/finance/{{ user.username }}">💹 Finance</a>
     </div>
 
-</div>
 
 <div style="margin:20px;">
     🔗 Share your link:<br>
-<input type="text" value="{{ request.host_url }}register/{{ user.username }}">
+    <input type="text" value="{{ request.host_url }}register?ref={{ user.username }}" style="width:100%;">
 </div>
-
 <script>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/static/sw.js');

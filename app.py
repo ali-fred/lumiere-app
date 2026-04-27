@@ -123,8 +123,10 @@ def login():
 # REGISTER
 # ------------------------
 @app.route('/register', methods=['GET', 'POST'])
-@app.route('/register/<referrer>', methods=['GET', 'POST'])
-def register(referrer=None):
+def register():
+
+    referrer = request.args.get('ref')  # 👈 from URL
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -138,14 +140,14 @@ def register(referrer=None):
             conn.close()
             return "User already exists"
 
-        # 🎁 bonus for new user
+        # 🎁 new user bonus
         balance = BONUS
 
         # insert new user
         c.execute("INSERT INTO users (username, password, balance) VALUES (?, ?, ?)",
                   (username, password, balance))
 
-        # 🎁 bonus for referrer (if exists)
+        # 🎁 bonus for referrer
         if referrer:
             c.execute("SELECT * FROM users WHERE username=?", (referrer,))
             if c.fetchone():
@@ -158,11 +160,6 @@ def register(referrer=None):
         return redirect('/login')
 
     return render_template('register.html')
-
-@app.route('/test')
-def test():
-    return "OK"
-
 
 # ------------------------
 # DASHBOARD
