@@ -131,8 +131,7 @@ def register():
 
     if request.method == 'POST':
         username = request.form.get('username')
-        password = request.form.get('password')
-
+        password = hash_password(request.form.get('password'))
         conn = sqlite3.connect(DB)
         c = conn.cursor()
 
