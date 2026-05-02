@@ -99,8 +99,9 @@ def login_required(f):
 # ------------------------
 # LOGIN
 # ------------------------
+
 @app.route('/', methods=['GET', 'POST'])
-def login():
+def home():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -117,11 +118,8 @@ def login():
         return "User not found"
 
     return render_template("login.html")
-
-
-# 👉 kugira /login nayo ikore
 @app.route('/login', methods=['GET', 'POST'])
-def login_redirect():
+def login():
     return redirect('/')
 # ------------------------
 # REGISTER
