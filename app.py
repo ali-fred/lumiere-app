@@ -301,7 +301,8 @@ def qr(username):
 @login_required
 def settings(username):
     user = get_user(username)
-    return render_template('settings.html', user=user, username=username)
+    return render_template('settings.html', user=user)
+
 
 @app.route('/set_language', methods=['POST'])
 def set_language():
@@ -309,37 +310,47 @@ def set_language():
     session['lang'] = lang
     return redirect(request.referrer)
 
+
 @app.route('/quick_actions/<username>')
 @login_required
 def quick_actions(username):
-    return render_template('quick_actions.html', user=get_user(username))
+    user = get_user(username)
+    return render_template('quick_actions.html', user=user)
+
 
 @app.route('/finance/<username>')
 @login_required
 def finance(username):
     user = get_user(username)
-    return render_template('finance.html', user=user, username=username)
+    return render_template('finance.html', user=user)
 
 
 @app.route('/about/<username>')
 @login_required
 def about(username):
-    return render_template('about.html', user=get_user(username))
+    user = get_user(username)
+    return render_template('about.html', user=user)
+
 
 @app.route('/contact/<username>')
 @login_required
 def contact(username):
-    return render_template('contact.html', user=get_user(username))
+    user = get_user(username)
+    return render_template('contact.html', user=user)
+
 
 @app.route('/privacy/<username>')
 @login_required
 def privacy(username):
-    return render_template('privacy.html', user=get_user(username))
+    user = get_user(username)
+    return render_template('privacy.html', user=user)
+
 
 @app.route('/confidentialite/<username>')
 @login_required
 def confidentialite(username):
-    return render_template('confidentialite.html', user=get_user(username))
+    user = get_user(username)
+    return render_template('confidentialite.html', user=user)
 
 # ------------------------
 # RECEIVE
