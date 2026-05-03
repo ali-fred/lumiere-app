@@ -10,6 +10,8 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return "APP IS WORKING"
+
+print("🔥 THIS IS THE REAL APP.PY RUNNING")
 # -------- USERS --------
 users = {
     "Huruma": {
