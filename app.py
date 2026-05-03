@@ -7,7 +7,9 @@ from datetime import datetime, timedelta
 import time
 
 app = Flask(__name__)
-
+@app.route('/')
+def home():
+    return "APP IS WORKING"
 # -------- USERS --------
 users = {
     "Huruma": {
